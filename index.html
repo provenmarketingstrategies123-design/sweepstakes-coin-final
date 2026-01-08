@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sweepstakes Coin</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: radial-gradient(circle at top, #111827, #000);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .app {
+      background: #0f172a;
+      padding: 24px;
+      border-radius: 16px;
+      width: 320px;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: 22px;
+    }
+
+    .balance {
+      font-size: 28px;
+      margin: 16px 0;
+      font-weight: bold;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      border-radius: 12px;
+      border: none;
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      color: #000;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-bottom: 12px;
+    }
+
+    button.secondary {
+      background: linear-gradient(135deg, #38bdf8, #0284c7);
+    }
+
+    .small {
+      font-size: 12px;
+      opacity: 0.7;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <h1>🎟️ Sweepstakes Coin</h1>
+
+    <div class="balance" id="balance">0 SC</div>
+
+    <button onclick="earnCoin()">Earn 1 Coin</button>
+    <button class="secondary" onclick="claimDaily()">Daily Free Coins</button>
+    <button class="secondary" onclick="enterDrawing()">Enter Sweepstakes</button>
+
+    <p class="small">No purchase necessary. For demo purposes only.</p>
+  </div>
+
+  <script>
+    let balance = localStorage.getItem('sc_balance')
+      ? parseInt(localStorage.getItem('sc_balance'))
+      : 0;
+
+    const balanceEl = document.getElementById('balance');
+    updateUI();
+
+    function updateUI() {
+      balanceEl.textContent = balance + ' SC';
+      localStorage.setItem('sc_balance', balance);
+    }
+
+    function earnCoin() {
+      balance += 1;
+      updateUI();
+    }
+
+    function claimDaily() {
+      const lastClaim = localStorage.getItem('sc_last_claim');
+      const now = Date.now();
+      const day = 24 * 60 * 60 * 1000;
+
+      if (lastClaim && now - lastClaim < day) {
+        const hoursLeft = Math.ceil(
+          (day - (now - lastClaim)) / (1000 * 60 * 60)
+        );
+        alert(`Come back in ${hoursLeft} hour(s) for your next daily reward.`);
+        return;
+      }
+
+      balance += 5;
+      localStorage.setItem('sc_last_claim', now);
+      updateUI();
+      alert('✅ You claimed 5 daily free coins!');
+    }
+
+    function enterDrawing() {
+      if (balance < 10) {
+        alert('You need at least 10 coins to enter.');
+        return;
+      }
+      balance -= 10;
+      updateUI();
+      alert('🎉 Entry submitted! (demo only)');
+    }
+  </script>
+</body>
+</html>
