@@ -120,6 +120,41 @@
       updateUI();
       alert('🎉 Entry submitted! (demo only)');
     }
+  function playSlots() {
+  if (balance < 5) {
+    alert("You need at least 5 SC to spin the slot machine!");
+    return;
+  }
+
+  balance -= 5; // cost to play
+  updateUI();
+
+  const symbols = ["🍒", "🍋", "🔔"];
+  // randomly pick 3 symbols
+  const reel = [
+    symbols[Math.floor(Math.random() * symbols.length)],
+    symbols[Math.floor(Math.random() * symbols.length)],
+    symbols[Math.floor(Math.random() * symbols.length)]
+  ];
+
+  let payout = 0;
+  // check matches
+  if (reel[0] === reel[1] && reel[1] === reel[2]) {
+    payout = 50;
+  } else if (reel[0] === reel[1] || reel[1] === reel[2] || reel[0] === reel[2]) {
+    payout = 10;
+  }
+
+  balance += payout;
+  updateUI();
+
+  // show result
+  document.getElementById("slotResult").textContent =
+    `🎰 ${reel.join(" ")} → You won ${payout} SC!`;
+}
   </script>
 </body>
 </html>
+<h2>🎰 Slot Machine</h2>
+<button class="secondary" onclick="playSlots()">Spin 5 SC</button>
+<p id="slotResult"></p>
